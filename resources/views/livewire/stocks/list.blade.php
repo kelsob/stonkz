@@ -32,7 +32,8 @@ new class extends Component {
             @foreach(['1H' => '1H', '1D' => '1D', '1W' => '1W', '1M' => '1M', '1Y' => '1Y'] as $scale => $label)
             <button wire:click="timeScaleChanged('{{ $scale }}')"
                     class="font-bold py-0 px-2 rounded transition duration-300 ease-in-out 
-                        {{ $timeScale == $scale ? 'bg-blue-500 text-white' : 'bg-white text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white' }}">
+                        {{ $timeScale == $scale ? 'bg-blue-500 text-white' : 'bg-white text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white' }}"
+                        id='{{ $scale }}Button'>
                 {{ $label }}
             </button>
             @endforeach
@@ -42,17 +43,18 @@ new class extends Component {
         <div class="flex space-x-2 pr-2">
             @foreach(['line' => 'Line', 'bar' => 'Bar', 'pie' => 'Pie'] as $type => $label)
             <button wire:click="chartTypeChanged('{{ $type }}')"
-                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded transition duration-300 ease-in-out {{ $chartType == $type ? 'bg-green-700' : '' }}">
+                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded transition duration-300 ease-in-out {{ $chartType == $type ? 'bg-green-700' : '' }}"
+                    id="{{ $type }}Button">
                 <!-- SVG icons here -->
                 @if($type == 'line')
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" class="w-6 h-6">
-                        <path d="M2 17 L6 10 L12 14 L18 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 17 L5 13 L8 15 L11 9 L14 11 L17 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 @elseif($type == 'bar')
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-6 h-6">
-                        <rect x="1" y="14" width="6" height="4" />
-                        <rect x="8" y="10" width="6" height="8" />
-                        <rect x="15" y="2" width="6" height="16" />
+                        <rect x="1" y="14" width="4" height="4" />
+                        <rect x="8" y="10" width="4" height="8" />
+                        <rect x="15" y="2" width="4" height="16" />
                     </svg>
                 @elseif($type == 'pie')
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" class="w-6 h-6">
@@ -70,7 +72,7 @@ new class extends Component {
             @php
                 $details = $stock->getChartData('1D');  // Defaulting to 1 Day for example
             @endphp
-            <a href="{{ route('stocks', ['stockId' => $stock->id]) }}" class="block text-decoration-none">
+            <a href="{{ route('stockdetails', ['stockId' => $stock->id]) }}" class="block text-decoration-none">
                 <div class="bg-white rounded-lg shadow-md p-4 hover:bg-gray-100">
                     <div class="flex justify-between items-center mb-0">
                         <h3 class="text-lg font-bold">{{ $stock->ticker }}</h3>
@@ -97,6 +99,6 @@ new class extends Component {
                 </div>
             </a>
         @endforeach
-        <script type="text/javascript" src="./index.js"></script>
+        <script type="text/javascript" src="{{ asset('masschartassigner.js') }}"></script>
     </div>
 </div>

@@ -18,24 +18,31 @@ new class extends Component
 
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" wire:navigate>
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none" stroke="currentColor" class="w-12 h-12">
+                            <line x1="0" y1="22" x2="40" y2="22" stroke="lightgray" stroke-width="1.5" stroke-dasharray="2.5 2.5" />
+
+                            <path d="M5 8 L11 20 L17 16 L23 28 L29 24 L35 36" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5 36 L11 24 L17 28 L23 16 L29 20 L35 8" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+                        </svg>
                     </a>
                 </div>
 
+
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-8 sm:-my-px sm:ms-4 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
-                <x-nav-link :href="route('stocks')" :active="request()->routeIs('chirps')" wire:navigate>
-                    {{ __('Stocks') }}
+                <x-nav-link :href="route('stocks')" :active="request()->routeIs('stocks')" wire:navigate>
+                    {{ __('Market') }}
                 </x-nav-link>
             </div>
 

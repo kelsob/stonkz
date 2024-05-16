@@ -12,6 +12,10 @@ Volt::route('/stocks', 'stocks.list')
     ->middleware(['auth', 'verified'])
     ->name('stocks'); 
 
+Volt::route('/stocks/{stockId}', 'stocks.details')
+    ->middleware(['auth', 'verified'])
+    ->name('stockdetails');
+
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
