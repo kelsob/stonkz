@@ -41,25 +41,41 @@ new class extends Component
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
-                <x-nav-link :href="route('stocks')" :active="request()->routeIs('stocks')" wire:navigate>
-                    {{ __('Market') }}
-                </x-nav-link>
-            </div>
+                    <x-nav-link :href="route('stocks')" :active="request()->routeIs('stocks')" wire:navigate>
+                        {{ __('Market') }}
+                    </x-nav-link>
+                </div>
+
+            <!-- Display Current Cash Balance -->
+                @auth
+                    <div class="ml-3 relative flex items-center">
+                        <div class="px-4 py-2 bg-gray-200 rounded-full shadow-lg flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c1.38 0 2.5 1.12 2.5 2.5S13.38 13 12 13 9.5 11.88 9.5 10.5 10.62 8 12 8zM12 8V4m0 4v4m0-4a4.5 4.5 0 00-4.5 4.5v.5a2 2 0 002 2h5a2 2 0 002-2v-.5a4.5 4.5 0 00-4.5-4.5z"></path>
+                            </svg>
+                            <div class="text-gray-800 font-bold mr-2">
+                                Balance: ${{ number_format(auth()->user()->balance, 2) }}
+                            </div>
+                        </div>
+                    </div>
+                @endauth
+
+
 
             <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
+                <div class="hidden sm:flex sm:items-center sm:ms-6">
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
 
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
+                                <div class="ms-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </x-slot>
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile')" wire:navigate>

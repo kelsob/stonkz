@@ -2,28 +2,61 @@
 
 use Livewire\Volt\Component;
 use App\Models\Stock;
-use Illuminate\Support\Facades\Log;
+use App\Models\User;
+use App\Services\StockTransactionService;
+use Illuminate\Support\Facades\Auth;
 
 new class extends Component {
-    
     public $stockId;
     public $stock;
     public $timeScale = "1D";
     public $chartType = "line";
+    public $purchaseQuantity = 0;
+    public $sellQuantity = 0;
+
+    protected $rules = [
+        'purchaseQuantity' => 'required|integer|min:1',
+        'sellQuantity' => 'required|integer|min:1',
+    ];
 
     public function mount($stockId) {
         $this->stockId = $stockId;
         $this->stock = Stock::find($stockId);
     }
+
     public function timeScaleChanged($scale) {
         $this->timeScale = $scale;
     }
+
     public function chartTypeChanged($type) {
         $this->chartType = $type;
     }
-} ?>
 
-<div class="flex items-center justify-center min-h-screen bg-gray-100 mt-2">
+    public function purchaseStock(StockTransactionService $service) {
+        $this->validateOnly('purchaseQuantity');
+        $user = Auth::user();
+        try {
+            $service->buyStock($user, $this->stock, $this->purchaseQuantity, $this->stock->current_price);
+            session()->flash('message', 'Stock purchased successfully.');
+        } catch (\Exception $e) {
+            session()->flash('error', $e->getMessage());
+        }
+    }
+
+    public function sellStock(StockTransactionService $service) {
+        $this->validateOnly('sellQuantity');
+        $user = Auth::user();
+        try {
+            $service->sellStock($user, $this->stock, $this->sellQuantity, $this->stock->current_price);
+            session()->flash('message', 'Stock sold successfully.');
+        } catch (\Exception $e) {
+            session()->flash('error', $e->getMessage());
+        }
+    }
+};
+?>
+
+<div class="flex items-center justify-center min-h-screen bg-gray-100 space-x-2 p-2">
     <div class="bg-white rounded-lg shadow-md p-4 max-w-5xl w-full">
         <div class="flex items-center justify-between mb-2">
             <!-- Time Scale Buttons Left-aligned -->
@@ -71,7 +104,6 @@ new class extends Component {
             <p class="text-gray-600 font-semibold">{{ $stock->name }}</p>
         </div>
 
-
         @php
             $details = $stock->getChartData('1D');  // Defaulting to 1 Day for example
         @endphp
@@ -90,9 +122,30 @@ new class extends Component {
                 data-name="{{ $stock->name }}"
                 data-dataJson="{{ $details['dataJson'] }}"
                 data-labelsJson="{{ $details['labelsJson'] }}"
-                data-chart-type="{{ $chartType }}"
-                ></canvas>
+                data-chart-type="{{ $chartType }}">
+            </canvas>
         </div>
         <script type="text/javascript" src="{{ asset('masschartassigner.js') }}"></script>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-4 max-w-5xl w-full min-h-screen mt-1">
+        <div>
+            <p class="text-xl font-semibold">{{ $stock->description }}</p>
+            <p class="text-xl font-semibold">{{ $stock->motto }}</p>
+        </div>
+        <div class="mb-4">
+            <label for="purchaseQuantity" class="block text-sm font-medium text-gray-700">Purchase Quantity</label>
+            <input type="number" id="purchaseQuantity" wire:model="purchaseQuantity" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
+            <button wire:click="purchaseStock" class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
+                Purchase Stock
+            </button>
+        </div>
+
+        <div class="mb-4">
+            <label for="sellQuantity" class="block text-sm font-medium text-gray-700">Sell Quantity</label>
+            <input type="number" id="sellQuantity" wire:model="sellQuantity" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
+            <button wire:click="sellStock" class="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full">
+                Sell Stock
+            </button>
+        </div>
     </div>
 </div>
