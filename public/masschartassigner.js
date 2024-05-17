@@ -12,7 +12,6 @@ document.querySelectorAll('.stock-chart').forEach(canvas => {
     let parsedData = JSON.parse(dataJson)
     let parsedLabels = JSON.parse(labelsJson)
 
-    console.log(chartType)
     const chart = new Chart(ctx, {
         type: chartType,
         data: {

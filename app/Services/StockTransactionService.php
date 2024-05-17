@@ -6,6 +6,8 @@ use App\Models\Stock;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 
 class StockTransactionService
 {
@@ -14,9 +16,11 @@ class StockTransactionService
         // Check if the user has enough funds
         $totalCost = $price * $quantity;
         if ($user->balance < $totalCost) {
+            Log::info("insufficient funds.");
             throw new \Exception("Insufficient funds.");
         }
 
+        Log::info("sufficient funds, proceeding with purchase.");
         // Check stock availability or other conditions
         // Assuming we handle stock quantities, this part of the logic would go here
 
