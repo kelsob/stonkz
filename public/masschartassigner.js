@@ -85,7 +85,6 @@ var updateTimeScale = function(newTimeScale) {
                     canvas.setAttribute('data-dataJson', JSON.stringify(values));
 
                     // Re-render the chart
-                    chart.update();
                 }
             })
             .catch(error => console.error('Error fetching data:', error));
@@ -97,7 +96,6 @@ var updateChartType = function(chartType) {
     charts.forEach(chart => {    
 
         chart.config.type = chartType;
-        chart.update();
     
     })
 };

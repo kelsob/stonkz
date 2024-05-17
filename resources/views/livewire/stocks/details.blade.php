@@ -23,7 +23,7 @@ new class extends Component {
     }
 } ?>
 
-<div class="flex items-center justify-center min-h-screen bg-gray-100 mt-2">
+<div class="flex items-center justify-center  bg-gray-100 mt-2">
     <div class="bg-white rounded-lg shadow-md p-4 max-w-5xl w-full">
         <div class="flex items-center justify-between mb-2">
             <!-- Time Scale Buttons Left-aligned -->
@@ -84,7 +84,7 @@ new class extends Component {
                     ({{ $details['percentageDifferenceSign'] }}{{ $details['percentageDifference'] }}%)
                 </p>
             </div>
-            <canvas id="stockPriceGraph-{{ $stock->id }}" class="stock-chart w-full"
+            <canvas id="stockPriceGraph-{{ $stock->id }}" class="stock-chart w-fit"
                 data-ticker="{{ $stock->ticker }}"
                 data-stock-id="{{ $stock->id }}"
                 data-name="{{ $stock->name }}"
