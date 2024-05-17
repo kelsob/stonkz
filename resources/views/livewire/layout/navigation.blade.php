@@ -41,25 +41,41 @@ new class extends Component
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
-                <x-nav-link :href="route('stocks')" :active="request()->routeIs('stocks')" wire:navigate>
-                    {{ __('Market') }}
-                </x-nav-link>
-            </div>
+                    <x-nav-link :href="route('stocks')" :active="request()->routeIs('stocks')" wire:navigate>
+                        {{ __('Market') }}
+                    </x-nav-link>
+                </div>
+
 
             <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <!-- Display Current Cash Balance -->
+                    @auth
+                        <div class="ml-3 relative flex items-center">
+                          <div class="px-4 py-2 bg-gray-100 rounded-full shadow-lg flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="8" cy="14" r="6" class="text-green-300"/>
+                                    <circle cx="16" cy="14" r="6" class="text-green-500"/>
+                                    <circle cx="12" cy="8" r="6" class="text-green-400"/>
                                 </svg>
+                                <div class="text-gray-500 font-bold mr-2 text-sm">
+                                    {{ number_format(auth()->user()->balance, 2) }}
+                                </div>
                             </div>
-                        </button>
-                    </x-slot>
+                        </div>
+                    @endauth
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
+
+                                <div class="ms-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </x-slot>
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile')" wire:navigate>
