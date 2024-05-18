@@ -16,14 +16,11 @@ class StockTransactionService
         // Check if the user has enough funds
         $totalCost = $price * $quantity;
         if ($user->balance < $totalCost) {
-            Log::info("insufficient funds.");
             throw new \Exception("Insufficient funds.");
         }
 
-        Log::info("sufficient funds, proceeding with purchase.");
         // Check stock availability or other conditions
         // Assuming we handle stock quantities, this part of the logic would go here
-
         // If all checks pass, perform the transaction
         return DB::transaction(function () use ($user, $stock, $quantity, $price) {
             $transaction = new Transaction([
@@ -41,6 +38,7 @@ class StockTransactionService
 
             return $transaction;
         });
+        
     }
 
     public function sellStock(User $user, Stock $stock, int $quantity, float $price): Transaction

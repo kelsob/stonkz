@@ -49,21 +49,12 @@ new class extends Component
 
             <!-- Settings Dropdown -->
                 <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <!-- Display Current Cash Balance -->
+
+                    <!-- Display Current Cash Balance -->
                     @auth
-                        <div class="ml-3 relative flex items-center">
-                          <div class="px-4 py-2 bg-gray-100 rounded-full shadow-lg flex items-center">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="8" cy="14" r="6" class="text-green-300"/>
-                                    <circle cx="16" cy="14" r="6" class="text-green-500"/>
-                                    <circle cx="12" cy="8" r="6" class="text-green-400"/>
-                                </svg>
-                                <div class="text-gray-500 font-bold mr-2 text-sm">
-                                    {{ number_format(auth()->user()->balance, 2) }}
-                                </div>
-                            </div>
-                        </div>
+                        <livewire:balance />
                     @endauth
+
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">

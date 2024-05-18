@@ -98,7 +98,7 @@ class Stock extends Model
         return [
             'labelsJson' => $labelsJson,
             'dataJson' => $dataJson,
-            'currentPrice' => number_format($lastPrice, 2),
+            'currentPrice' => number_format($this->price, 2),
             'priceDifference' => number_format(abs($priceDifference), 2),
             'priceDifferenceSign' => $priceDifference >= 0 ? '+' : '-',
             'percentageDifference' => number_format(abs($percentageDifference), 2),

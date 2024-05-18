@@ -5,6 +5,8 @@ use App\Models\Stock;
 use App\Models\User;
 use App\Services\StockTransactionService;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Computed;
+
 
 new class extends Component {
     public $stockId;
@@ -38,6 +40,7 @@ new class extends Component {
         try {
             $service->buyStock($user, $this->stock, $this->purchaseQuantity, $this->stock->price);
             request()->session()->flash('message', 'Stock purchased successfully.');
+            $this->dispatch('user-balance-changed'); 
         } catch (\Exception $e) {
             request()->session()->flash('error', $e->getMessage());
         }
@@ -49,9 +52,19 @@ new class extends Component {
         try {
             $service->sellStock($user, $this->stock, $this->sellQuantity, $this->stock->price);
             session()->flash('message', 'Stock sold successfully.');
+            $this->dispatch('user-balance-changed'); 
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
         }
+    }
+    #[Computed]
+    public function totalPurchasePrice() {
+        Log::info(["purchase price:", $this->purchaseQuantity * $this->stock->price]);
+        return $this->purchaseQuantity * $this->stock->price;
+    }
+    #[Computed]
+    public function totalSellPrice() {
+        return $this->sellQuantity * $this->stock->price;
     }
 };
 ?>
@@ -76,8 +89,7 @@ new class extends Component {
 
     <div class="flex items-center justify-center bg-gray-100 space-x-2 p-2">
         <!-- Flash Messages -->
-
-        <div class="bg-white rounded-lg shadow-md p-4 max-w-5xl w-full">
+        <div class="bg-white rounded-lg shadow-md p-4 max-w-xl w-full">
             <div class="flex items-center justify-between mb-2">
                 <!-- Time Scale Buttons Left-aligned -->
                 <div class="flex space-x-2">
@@ -157,19 +169,21 @@ new class extends Component {
                 <p class="text-xl font-semibold">{{ $stock->description }}</p>
                 <p class="text-xl font-semibold">{{ $stock->motto }}</p>
             </div>
+            <!-- Purchase Quantity Section -->
             <div class="mb-4">
                 <label for="purchaseQuantity" class="block text-sm font-medium text-gray-700">Purchase Quantity</label>
                 <input type="number" id="purchaseQuantity" wire:model="purchaseQuantity" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
                 <button wire:click="purchaseStock" class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
-                    Purchase Stock
+                    Purchase Stock ({{ $this->totalPurchasePrice }})
                 </button>
             </div>
 
+            <!-- Sell Quantity Section -->
             <div class="mb-4">
                 <label for="sellQuantity" class="block text-sm font-medium text-gray-700">Sell Quantity</label>
                 <input type="number" id="sellQuantity" wire:model="sellQuantity" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
                 <button wire:click="sellStock" class="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full">
-                    Sell Stock
+                    Sell Stock ({{ $this->totalSellPrice }})
                 </button>
             </div>
         </div>
