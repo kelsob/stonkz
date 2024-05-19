@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Http\Controllers\StockController;
+use App\Livewire\Stocks\Details;
 
 Route::view('/', 'welcome');
 
@@ -12,7 +13,7 @@ Volt::route('/stocks', 'stocks.list')
     ->middleware(['auth', 'verified'])
     ->name('stocks'); 
 
-Volt::route('/stocks/{stockId}', 'stocks.details')
+Route::get('/stocks/{stockId}', Details::class)
     ->middleware(['auth', 'verified'])
     ->name('stockdetails');
 

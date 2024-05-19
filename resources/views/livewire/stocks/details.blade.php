@@ -1,73 +1,3 @@
-<?php
-
-use Livewire\Volt\Component;
-use App\Models\Stock;
-use App\Models\User;
-use App\Services\StockTransactionService;
-use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\Computed;
-
-
-new class extends Component {
-    public $stockId;
-    public $stock;
-    public $timeScale = "1D";
-    public $chartType = "line";
-    public $purchaseQuantity = 0;
-    public $sellQuantity = 0;
-
-    protected $rules = [
-        'purchaseQuantity' => 'required|integer|min:1',
-        'sellQuantity' => 'required|integer|min:1',
-    ];
-
-    public function mount($stockId) {
-        $this->stockId = $stockId;
-        $this->stock = Stock::find($stockId);
-    }
-
-    public function timeScaleChanged($scale) {
-        $this->timeScale = $scale;
-    }
-
-    public function chartTypeChanged($type) {
-        $this->chartType = $type;
-    }
-
-    public function purchaseStock(StockTransactionService $service) {
-        $this->validateOnly('purchaseQuantity');
-        $user = Auth::user();
-        try {
-            $service->buyStock($user, $this->stock, $this->purchaseQuantity, $this->stock->price);
-            request()->session()->flash('message', 'Stock purchased successfully.');
-            $this->dispatch('user-balance-changed'); 
-        } catch (\Exception $e) {
-            request()->session()->flash('error', $e->getMessage());
-        }
-    }
-
-    public function sellStock(StockTransactionService $service) {
-        $this->validateOnly('sellQuantity');
-        $user = Auth::user();
-        try {
-            $service->sellStock($user, $this->stock, $this->sellQuantity, $this->stock->price);
-            session()->flash('message', 'Stock sold successfully.');
-            $this->dispatch('user-balance-changed'); 
-        } catch (\Exception $e) {
-            session()->flash('error', $e->getMessage());
-        }
-    }
-    #[Computed]
-    public function totalPurchasePrice() {
-        Log::info(["purchase price:", $this->purchaseQuantity * $this->stock->price]);
-        return $this->purchaseQuantity * $this->stock->price;
-    }
-    #[Computed]
-    public function totalSellPrice() {
-        return $this->sellQuantity * $this->stock->price;
-    }
-};
-?>
 
 <div>
 <!-- Flash Messages -->
@@ -172,18 +102,18 @@ new class extends Component {
             <!-- Purchase Quantity Section -->
             <div class="mb-4">
                 <label for="purchaseQuantity" class="block text-sm font-medium text-gray-700">Purchase Quantity</label>
-                <input type="number" id="purchaseQuantity" wire:model="purchaseQuantity" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
+                <input type="number" id="purchaseQuantity" wire:model.blur="purchaseQuantity" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
                 <button wire:click="purchaseStock" class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
-                    Purchase Stock ({{ $this->totalPurchasePrice }})
+                    Purchase Stock (-${{ number_format($purchaseQuantity * $details['currentPrice'], 2)}})
                 </button>
             </div>
 
             <!-- Sell Quantity Section -->
             <div class="mb-4">
                 <label for="sellQuantity" class="block text-sm font-medium text-gray-700">Sell Quantity</label>
-                <input type="number" id="sellQuantity" wire:model="sellQuantity" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
+                <input type="number" id="sellQuantity" wire:model.blur="sellQuantity" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
                 <button wire:click="sellStock" class="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full">
-                    Sell Stock ({{ $this->totalSellPrice }})
+                    Sell Stock (+${{ number_format($sellQuantity * $details['currentPrice'], 2)}})
                 </button>
             </div>
         </div>
