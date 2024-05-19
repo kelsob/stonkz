@@ -99,23 +99,8 @@
                 <p class="text-xl font-semibold">{{ $stock->description }}</p>
                 <p class="text-xl font-semibold">{{ $stock->motto }}</p>
             </div>
-            <!-- Purchase Quantity Section -->
-            <div class="mb-4">
-                <label for="purchaseQuantity" class="block text-sm font-medium text-gray-700">Purchase Quantity</label>
-                <input type="number" id="purchaseQuantity" wire:model.blur="purchaseQuantity" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
-                <button wire:click="purchaseStock" class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
-                    Purchase Stock (-${{ number_format($purchaseQuantity * $details['currentPrice'], 2)}})
-                </button>
-            </div>
-
-            <!-- Sell Quantity Section -->
-            <div class="mb-4">
-                <label for="sellQuantity" class="block text-sm font-medium text-gray-700">Sell Quantity</label>
-                <input type="number" id="sellQuantity" wire:model.blur="sellQuantity" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
-                <button wire:click="sellStock" class="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full">
-                    Sell Stock (+${{ number_format($sellQuantity * $details['currentPrice'], 2)}})
-                </button>
-            </div>
+            <livewire:purchase-stock :price="$details['currentPrice']" :stock="$stock"/>
+            <livewire:sell-stock :price="$details['currentPrice']" :stock="$stock"/>
         </div>
     </div>
 </div>
