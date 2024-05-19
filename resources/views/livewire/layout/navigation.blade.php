@@ -40,12 +40,12 @@ new class extends Component
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                </div>
                     <x-nav-link :href="route('stocks')" :active="request()->routeIs('stocks')" wire:navigate>
                         {{ __('Market') }}
                     </x-nav-link>
-                </div>
-
+                    <x-nav-link :href="route('portfolio')" :active="request()->routeIs('portfolio')" wire:navigate>
+                        {{ __('Portfolio') }}
+                    </x-nav-link>
 
             <!-- Settings Dropdown -->
                 <div class="hidden sm:flex sm:items-center sm:ms-6">
