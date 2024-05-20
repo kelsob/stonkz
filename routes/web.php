@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Http\Controllers\StockController;
 use App\Livewire\Stocks\Details;
+use App\Livewire\Stocks\Catalog;
 use App\Livewire\Portfolio;
 
 Route::view('/', 'welcome');
@@ -14,7 +15,7 @@ Route::get('/portfolio', Portfolio::class)
     ->middleware(['auth', 'verified'])
     ->name('portfolio');
 
-Volt::route('/stocks', 'stocks.list')
+Route::get('/stocks', Catalog::class)
     ->middleware(['auth', 'verified'])
     ->name('stocks'); 
 

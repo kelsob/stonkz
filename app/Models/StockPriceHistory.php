@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class StockPriceHistory extends Model
 {
-    protected $fillable = ['stock_id', 'price'];
+    protected $fillable = ['id', 'stock_id', 'price', 'created_at'];
 
     public function stock()
     {
