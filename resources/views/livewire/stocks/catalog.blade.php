@@ -50,16 +50,24 @@
                 <div class="bg-white rounded-lg shadow-md p-4 hover:bg-gray-100">
                     <div class="flex justify-between items-center mb-0">
                         <h3 class="text-lg font-bold">{{ $stock->ticker }}</h3>
-                        <p class="mb-1 {{ $details['priceColorClass'] }} font-bold">
-                            {{ $details['priceDifferenceSign'] }}${{ $details['priceDifference'] }}
-                        </p>
+
+                        <!-- Adjust this container to align items inline and center the first two with the larger one -->
+                        <div class="flex items-center gap-1">
+                            <p class="text-sm {{ $details['priceColorClass'] }} font-bold">
+                                {{ $details['priceDifferenceSign'] }}${{ $details['priceDifference'] }}
+                            </p>
+                            <p class="text-sm {{ $details['priceColorClass'] }} font-semibold">
+                                ({{ $details['percentageDifferenceSign'] }}{{ $details['percentageDifference'] }}%)
+                            </p>
+                            <p class="text-xl font-bold">
+                                ${{ $details['currentPrice'] }}
+                            </p>
+                        </div>
                     </div>
+
                     <!-- Temporary debug output -->
                     <div class="flex justify-between items-center mb-0">
                         <p class="text-gray-600 mb-1">{{ $stock->name }}</p>
-                        <p class="mb-1 {{ $details['priceColorClass'] }} font-semibold">
-                            ({{ $details['percentageDifferenceSign'] }}{{ $details['percentageDifference'] }}%)
-                        </p>
                     </div>
                     <canvas id="stockPriceGraph-{{ $stock->id }}" class="stock-chart"
                         data-ticker="{{ $stock->ticker }}"

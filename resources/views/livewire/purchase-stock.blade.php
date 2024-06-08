@@ -2,8 +2,6 @@
     @php
         $userBalance = Auth::user()->balance;
         $purchaseQuantity = isset($purchaseQuantity) && is_numeric($purchaseQuantity) ? $purchaseQuantity : 0;
-        Log::info($purchaseQuantity);
-        Log::info($price);
         $totalPurchasePrice = $purchaseQuantity * $price;
         $canAfford = $totalPurchasePrice <= $userBalance;
     @endphp
