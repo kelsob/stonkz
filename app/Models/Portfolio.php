@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,17 +8,15 @@ class Portfolio extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'total_value'];
+    protected $fillable = ['user_id'];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function stocks()
+    public function portfolioStocks()
     {
-        return $this->belongsToMany(Stock::class, 'portfolio_stocks')
-                    ->withPivot('quantity', 'average_price')
-                    ->withTimestamps();
+        return $this->hasMany(PortfolioStock::class);
     }
 }

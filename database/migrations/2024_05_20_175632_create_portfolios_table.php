@@ -11,21 +11,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('portfolio_stocks', function (Blueprint $table) {
+        Schema::create('portfolios', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('portfolio_id')->constrained()->onDelete('cascade');
-            $table->foreignId('stock_id')->constrained()->onDelete('cascade');
-            $table->integer('quantity')->default(0);
-            $table->decimal('average_price', 15, 2)->default(0);
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
-    
 
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('portfolios');
     }
