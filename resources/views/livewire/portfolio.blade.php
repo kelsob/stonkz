@@ -22,8 +22,16 @@
                         $changeClass = $change >= 0 ? 'text-green-600' : 'text-red-600';
                     @endphp
                     <tr>
-                        <td class="border px-4 py-2">{{ $portfolioStock->stock->name }}</td>
-                        <td class="border px-4 py-2">{{ $portfolioStock->stock->ticker }}</td>
+                        <td class="border px-4 py-2">
+                            <a href="{{ route('stockdetails', ['stockId' => $portfolioStock->stock->id]) }}" class="block text-blue-500 hover:underline">
+                                {{ $portfolioStock->stock->name }}
+                            </a>
+                        </td>
+                        <td class="border px-4 py-2">
+                            <a href="{{ route('stockdetails', ['stockId' => $portfolioStock->stock->id]) }}" class="block text-blue-500 hover:underline">
+                                {{ $portfolioStock->stock->ticker }}
+                            </a>
+                        </td>
                         <td class="border px-4 py-2">{{ $portfolioStock->quantity }}</td>
                         <td class="border px-4 py-2">${{ number_format($portfolioStock->average_price, 2) }}</td>
                         <td class="border px-4 py-2">${{ number_format($currentPrice, 2) }}</td>
