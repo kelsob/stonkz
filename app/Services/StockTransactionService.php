@@ -32,8 +32,8 @@ class StockTransactionService
 
             $portfolio = $user->portfolio;
             $portfolioStock = $portfolio->portfolioStocks()->firstOrNew(['stock_id' => $stock->id]);
-            $portfolioStock->quantity += $quantity;
             $portfolioStock->average_price = ($portfolioStock->average_price * $portfolioStock->quantity + $price * $quantity) / ($portfolioStock->quantity + $quantity);
+            $portfolioStock->quantity += $quantity;
             $portfolioStock->save();
 
             return $transaction;
