@@ -7,7 +7,7 @@ use App\Livewire\Stocks\Details;
 use App\Livewire\Stocks\Catalog;
 use App\Livewire\Portfolio;
 
-Route::view('/', 'welcome');
+Route::view('/', 'dashboard');
 
 Route::get('/stocks/{stockId}/data', [StockController::class, 'getData']);
 
@@ -16,15 +16,12 @@ Route::get('/portfolio', Portfolio::class)
     ->name('portfolio');
 
 Route::get('/stocks', Catalog::class)
-    ->middleware(['auth', 'verified'])
     ->name('stocks'); 
 
 Route::get('/stocks/{stockId}', Details::class)
-    ->middleware(['auth', 'verified'])
     ->name('stockdetails');
 
 Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
 Route::view('profile', 'profile')
