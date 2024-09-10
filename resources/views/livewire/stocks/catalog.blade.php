@@ -1,4 +1,3 @@
-
 <div class="mx-auto max-w-screen-lg mt-2">
     <div class="flex item-center justify-between space-x-4 mb-2 mt-2">
         <!-- Time Scale Buttons Left-aligned -->
@@ -45,6 +44,15 @@
         @foreach ($stocks as $stock)
             @php
                 $details = $stock->getChartData('1D');  // Defaulting to 1 Day for example
+
+                // Format price differences and current price to show negative values correctly
+                $formattedPriceDifference = $details['priceDifference'] < 0 
+                    ? '-$' . number_format(abs($details['priceDifference']), 2) 
+                    : '$' . number_format($details['priceDifference'], 2);
+                
+                $formattedCurrentPrice = $details['currentPrice'] < 0 
+                    ? '-$' . number_format(abs($details['currentPrice']), 2) 
+                    : '$' . number_format($details['currentPrice'], 2);
             @endphp
             <a href="{{ route('stockdetails', ['stockId' => $stock->id]) }}" class="block text-decoration-none">
                 <div class="bg-white rounded-lg shadow-md p-4 hover:bg-gray-100">
@@ -54,13 +62,13 @@
                         <!-- Adjust this container to align items inline and center the first two with the larger one -->
                         <div class="flex items-center gap-1">
                             <p class="text-sm {{ $details['priceColorClass'] }} font-bold">
-                                {{ $details['priceDifferenceSign'] }}${{ $details['priceDifference'] }}
+                                {{ $details['priceDifferenceSign'] }}{{ $formattedPriceDifference }}
                             </p>
                             <p class="text-sm {{ $details['priceColorClass'] }} font-semibold">
                                 ({{ $details['percentageDifferenceSign'] }}{{ $details['percentageDifference'] }}%)
                             </p>
                             <p class="text-xl font-bold">
-                                ${{ $details['currentPrice'] }}
+                                {{ $formattedCurrentPrice }}
                             </p>
                         </div>
                     </div>

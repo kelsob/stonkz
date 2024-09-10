@@ -1,6 +1,5 @@
-
 <div>
-<!-- Flash Messages -->
+    <!-- Flash Messages -->
     @if (session('message'))
         <div class="container mx-auto mt-4">
             <div class="bg-green-100 border-t border-b border-green-500 text-green-700 px-4 py-3 rounded mx-auto max-w-2xl text-center">
@@ -68,15 +67,24 @@
 
             @php
                 $details = $stock->getChartData('1D');  // Defaulting to 1 Day for example
+
+                // Format price differences and current price to show negative values correctly
+                $formattedCurrentPrice = $details['currentPrice'] < 0 
+                    ? '-$' . number_format(abs($details['currentPrice']), 2) 
+                    : '$' . number_format($details['currentPrice'], 2);
+                
+                $formattedPriceDifference = $details['priceDifference'] < 0 
+                    ? '-$' . number_format(abs($details['priceDifference']), 2) 
+                    : '$' . number_format($details['priceDifference'], 2);
             @endphp
             <div class="bg-white rounded-lg shadow-lg pr-4 pl-2 pt-2 pb-2">
                 <div class="flex justify-between items-center mb-2">
                     <p class="text-xl {{ $details['priceColorClass'] }} font-bold">
-                        ${{ $details['currentPrice'] }}
+                        {{ $formattedCurrentPrice }}
                     </p>
                     <div class="text-right">
                         <p class="text-2xl {{ $details['priceColorClass'] }} font-semibold">
-                            {{ $details['priceDifferenceSign'] }}${{ $details['priceDifference'] }}
+                            {{ $details['priceDifferenceSign'] }}{{ $formattedPriceDifference }}
                         </p>
                         <p class="text-xl {{ $details['priceColorClass'] }} font-semibold">
                             ({{ $details['percentageDifferenceSign'] }}{{ $details['percentageDifference'] }}%)

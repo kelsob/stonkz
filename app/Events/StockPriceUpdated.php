@@ -17,7 +17,9 @@ class StockPriceUpdated implements ShouldBroadcast
 
     public function __construct(Stock $stock)
     {
+        $stock->calculateVolatility();
         $this->stock = $stock;
+        
     }
 
     public function broadcastOn()

@@ -14,6 +14,10 @@
             class="mt-2 font-bold py-2 px-4 rounded w-full
                    {{ $canSell ? 'bg-red-500 hover:bg-red-700 text-white' : 'bg-gray-500 text-gray-300 cursor-not-allowed' }}"
             {{ !$canSell ? 'disabled' : '' }}>
-        Sell Stock (+${{ $totalSellValue }})
+        Sell Stock (+{{ $totalSellValue < 0 ? '-$' . number_format(abs($totalSellValue), 2) : '$' . number_format($totalSellValue, 2) }})
     </button>
+
+    @if(!$canSell && $sellQuantity > $availableQuantity)
+        <p class="text-red-500 text-sm mt-2">You cannot sell more than you own.</p>
+    @endif
 </div>

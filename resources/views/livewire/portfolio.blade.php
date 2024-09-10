@@ -20,6 +20,11 @@
                         $totalValue = $portfolioStock->quantity * $currentPrice;
                         $change = (($currentPrice - $portfolioStock->average_price) / $portfolioStock->average_price) * 100;
                         $changeClass = $change >= 0 ? 'text-green-600' : 'text-red-600';
+                        
+                        // Format prices to show negative values correctly
+                        $formattedAveragePrice = $portfolioStock->average_price < 0 ? '-$' . number_format(abs($portfolioStock->average_price), 2) : '$' . number_format($portfolioStock->average_price, 2);
+                        $formattedCurrentPrice = $currentPrice < 0 ? '-$' . number_format(abs($currentPrice), 2) : '$' . number_format($currentPrice, 2);
+                        $formattedTotalValue = $totalValue < 0 ? '-$' . number_format(abs($totalValue), 2) : '$' . number_format($totalValue, 2);
                     @endphp
                     <tr>
                         <td class="border px-4 py-2">
@@ -33,9 +38,9 @@
                             </a>
                         </td>
                         <td class="border px-4 py-2">{{ $portfolioStock->quantity }}</td>
-                        <td class="border px-4 py-2">${{ number_format($portfolioStock->average_price, 2) }}</td>
-                        <td class="border px-4 py-2">${{ number_format($currentPrice, 2) }}</td>
-                        <td class="border px-4 py-2">${{ number_format($totalValue, 2) }}</td>
+                        <td class="border px-4 py-2">{{ $formattedAveragePrice }}</td>
+                        <td class="border px-4 py-2">{{ $formattedCurrentPrice }}</td>
+                        <td class="border px-4 py-2">{{ $formattedTotalValue }}</td>
                         <td class="border px-4 py-2 {{ $changeClass }}">{{ number_format($change, 2) }}%</td>
                     </tr>
                 @endforeach

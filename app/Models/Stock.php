@@ -12,7 +12,7 @@ class Stock extends Model
 
     public $timeScale = "1D";
     public $priceHistories;
-    protected $fillable = ['name', 'ticker', 'price', 'motto', 'description'];
+    protected $fillable = ['name', 'ticker', 'price', 'motto', 'description', 'volatility'];
     protected $dates = ['deleted_at'];
 
     public function transactions()
@@ -101,4 +101,68 @@ class Stock extends Model
             default => ['start' => $today->copy()->subDay(), 'end' => $today],
         };
     }
+    public function calculateVolatility()
+    {
+        try {
+            // Fetch recent price histories (e.g., last 30 days)
+            $priceHistories = $this->priceHistories()
+                ->where('created_at', '>=', Carbon::now()->startOfDay())  // Start of the current day
+                ->orderBy('created_at', 'asc')
+                ->pluck('price')
+                ->toArray();
+
+            // If less than 2 data points, set volatility to 0
+            if (count($priceHistories) < 2) {
+                $this->volatility = 0;
+                $this->save();
+                return;
+            }
+
+            // Calculate percentage changes
+            $percentageChanges = [];
+            for ($i = 1; $i < count($priceHistories); $i++) {
+                $previousPrice = $priceHistories[$i - 1];
+                $currentPrice = $priceHistories[$i];
+
+                // Check for division by zero (avoid using $previousPrice == 0)
+                if ($previousPrice == 0) {
+                    continue;
+                }
+
+                $percentageChange = (($currentPrice - $previousPrice) / $previousPrice) * 100;
+                $percentageChanges[] = $percentageChange;
+            }
+
+            // If no valid percentage changes could be calculated, set volatility to 0
+            if (empty($percentageChanges)) {
+                $this->volatility = 0;
+                $this->save();
+                return;
+            }
+
+            // Calculate standard deviation of percentage changes
+            $averageChange = array_sum($percentageChanges) / count($percentageChanges);
+            $variance = array_sum(array_map(function ($x) use ($averageChange) {
+                return pow($x - $averageChange, 2);
+            }, $percentageChanges)) / count($percentageChanges);
+            $volatility = sqrt($variance);
+
+            // Adjust the sign of volatility based on the trend (averageChange)
+            if ($averageChange < 0) {
+                $volatility = -$volatility;
+            }
+
+            // Update the stock's volatility
+            $this->volatility = $volatility;
+            $this->save();
+        } catch (\Exception $e) {
+            // Log the error message to help diagnose any issues
+            \Log::error('Error calculating volatility for stock ID ' . $this->id . ': ' . $e->getMessage());
+            // Set volatility to 0 in case of an error
+            $this->volatility = 0;
+            $this->save();
+        }
+    }
+
+    
 }

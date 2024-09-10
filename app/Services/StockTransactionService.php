@@ -51,22 +51,36 @@ class StockTransactionService
                 'type' => 'sell'
             ]);
             $transaction->save();
-
+    
+            // Log the transaction details for debugging
+            Log::info("User {$user->id} sold {$quantity} shares of stock {$stock->id} at price {$price}.");
+    
             $user->balance += $price * $quantity;
             $user->save();
-
+    
             $portfolio = $user->portfolio;
             $portfolioStock = $portfolio->portfolioStocks()->where('stock_id', $stock->id)->first();
+    
             if ($portfolioStock) {
                 $portfolioStock->quantity -= $quantity;
+    
+                // Log the updated stock quantity for debugging
+                Log::info("User {$user->id} now owns {$portfolioStock->quantity} shares of stock {$stock->id}.");
+    
                 if ($portfolioStock->quantity <= 0) {
                     $portfolioStock->delete();
+                    // Log if the stock is being removed from the portfolio
+                    Log::info("User {$user->id} has no more shares of stock {$stock->id}. Stock has been removed from the portfolio.");
                 } else {
                     $portfolioStock->save();
                 }
+            } else {
+                // Log if the portfolioStock is not found
+                Log::error("Portfolio stock not found for user {$user->id} and stock {$stock->id}.");
             }
-
+    
             return $transaction;
         });
     }
+    
 }
